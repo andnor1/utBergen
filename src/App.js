@@ -117,10 +117,24 @@ async function dbUpsertEvents(events) {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 const GEO_QUERIES = [
-  "bar Bergen Norway", "pub Bergen Norway", "nattklubb Bergen",
-  "sportsbar Bergen", "cocktailbar Bergen", "live musikk bar Bergen",
-  "irish pub Bergen", "studentbar Bergen", "ølbar Bergen",
-  "utested Bergen sentrum", "nightclub Bergen", "sports bar Bergen",
+  "bar Bergen Norway",
+  "pub Bergen Norway",
+  "nattklubb Bergen",
+  "sportsbar Bergen",
+  "cocktailbar Bergen",
+  "live musikk bar Bergen",
+  "irish pub Bergen",
+  "studentbar Bergen",
+  "ølbar Bergen",
+  "utested Bergen sentrum",
+  "nightclub Bergen",
+  "sports bar Bergen",
+  "minigolf Bergen",
+  "shuffleboard bar Bergen",
+  "biljard bar Bergen",
+  "dart bar Bergen",
+  "biljardklubb Bergen",
+  "spillbar Bergen",
 ];
 
 function mapGoogleTypes(types = []) {

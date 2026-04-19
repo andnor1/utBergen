@@ -11,8 +11,6 @@ const supabase = createClient(
   process.env.REACT_APP_SUPABASE_KEY
 )
 
-
-
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY;
 const CLAUDE_KEY = process.env.REACT_APP_CLAUDE_KEY;
 
@@ -189,10 +187,13 @@ async function fetchWebsiteContent(venue) {
   if (!venue.website) return null;
   try {
     const res = await fetch(
-      `http://localhost:3001/fetch-website?url=${encodeURIComponent(venue.website)}`
+      `https://utbergen-server-production.up.railway.app/crawl-venue?url=${encodeURIComponent(venue.website)}`
     );
     if (!res.ok) return null;
     const data = await res.json();
+    if (data.links?.length > 0) {
+      console.log(`${venue.name}: crawlet ${data.links.length} undersider`);
+    }
     return data.text || null;
   } catch {
     return null;

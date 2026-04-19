@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(
   process.env.REACT_APP_SUPABASE_URL,
   process.env.REACT_APP_SUPABASE_KEY
-);
+)
 
 
 
@@ -134,7 +134,7 @@ function mapGoogleTypes(types = []) {
 
 async function googleTextSearch(query) {
   try {
-    const res = await fetch(`http://localhost:3001/places/search?query=${encodeURIComponent(query)}`);
+    const res = await fetch(`https://utbergen-server-production.up.railway.app/places/search?query=${encodeURIComponent(query)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     return data.results || [];

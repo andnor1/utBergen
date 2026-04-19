@@ -783,6 +783,15 @@ function Pipeline({onComplete}){
 
   const run=async()=>{
     if(phase!=="idle") return;
+  // Test Railway-tilkobling
+  try {
+    const test = await fetch('https://utbergen-server-production.up.railway.app/test');
+    const data = await test.json();
+    console.log('Railway test:', data);
+  } catch(err) {
+    console.error('Railway ikke tilgjengelig:', err);
+  }
+    if(phase!=="idle") return;
     setPhase("running");setLog([]);setPct(0);setCounts({venues:0,websites:0,scanned:0,events:0});
     const delay=ms=>new Promise(r=>setTimeout(r,ms));
     addLog("🚀 Starter pipeline...","#a78bfa");

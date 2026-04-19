@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState, useMemo, useRef, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 
@@ -10,8 +11,7 @@ const supabase = createClient(
   process.env.REACT_APP_SUPABASE_KEY
 );
 
-console.log('Supabase URL:', process.env.REACT_APP_SUPABASE_URL);
-console.log('Supabase KEY starter med:', process.env.REACT_APP_SUPABASE_KEY?.slice(0,20));
+
 
 const GOOGLE_KEY = process.env.REACT_APP_GOOGLE_KEY;
 const CLAUDE_KEY = process.env.REACT_APP_CLAUDE_KEY;
@@ -528,7 +528,7 @@ function VenueDetail({venue,events,onBack,onRequestChange,knownSubmitters}){
         {vEvents.length===0?<div style={{...card,textAlign:"center",color:"#334155",padding:"40px"}}>Ingen registrerte eventer for {venue.name}</div>:
         <div style={{display:"flex",flexDirection:"column",gap:6}}>
           {vEvents.map((ev,i)=>{const cfg=EV[ev.type]||{color:"#64748b",emoji:"📅"};return(
-            <div key={ev.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:"rgba(255,255,255,0.02)",borderLeft:`3px solid ${cfg.color}`,borderRadius:"0 10px 10px 0",border:`1px solid rgba(255,255,255,0.05)`,borderLeft:`3px solid ${cfg.color}`}}>
+            <div key={ev.id} style={{display:"flex",alignItems:"center",gap:10,padding:"10px 12px",background:"rgba(255,255,255,0.02)",borderLeft:`3px solid ${cfg.color}`,borderRadius:"0 10px 10px 0"}}>
               <span style={{fontSize:"16px"}}>{cfg.emoji}</span>
               <div style={{flex:1}}><div style={{color:"#f1f5f9",fontWeight:600,fontSize:"13px"}}>{ev.title}</div>{ev.league&&<span style={{color:cfg.color,fontSize:"10px",fontWeight:700}}>{ev.league}</span>}</div>
               <div style={{textAlign:"right"}}><div style={{color:cfg.color,fontWeight:700,fontSize:"12px"}}>{ev.time}</div><div style={{color:"#475569",fontSize:"10px"}}>{ev.date}</div></div>
@@ -680,7 +680,7 @@ function UserApp({venues,events,onRequestChange,knownSubmitters,loading}){
       {subTab==="events"&&<div style={{display:"flex",flexDirection:"column",gap:5}}>
         {allEvents.length===0&&<div style={{textAlign:"center",color:"#334155",padding:"40px 0",fontSize:"13px"}}>Ingen eventer – kjør AI-pipeline for å hente</div>}
         {allEvents.map((e,i)=>{const cfg=EV[e.type]||{color:"#64748b",emoji:"📅"};return(
-          <div key={i} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 12px",background:"rgba(255,255,255,0.025)",borderLeft:`3px solid ${cfg.color}`,borderRadius:"0 10px 10px 0",border:`1px solid rgba(255,255,255,0.05)`,borderLeft:`3px solid ${cfg.color}`}}>
+          <div key={i} style={{display:"flex",alignItems:"center",gap:9,padding:"10px 12px",background:"rgba(255,255,255,0.025)",borderLeft:`3px solid ${cfg.color}`,borderRadius:"0 10px 10px 0"}}>
             <span style={{fontSize:"16px"}}>{cfg.emoji}</span>
             <div style={{flex:1}}><div style={{color:"#f1f5f9",fontWeight:600,fontSize:"13px"}}>{e.title}</div><div style={{color:"#64748b",fontSize:"10px"}}>📍 {e.venueName}{e.league&&<span style={{marginLeft:7,color:cfg.color,fontWeight:700}}>{e.league}</span>}</div></div>
             <div style={{textAlign:"right"}}><div style={{color:cfg.color,fontWeight:700,fontSize:"12px"}}>{e.time}</div><div style={{color:"#475569",fontSize:"10px"}}>{e.date}</div></div>

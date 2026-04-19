@@ -158,7 +158,7 @@ async function googleTextSearch(query) {
 
 async function googlePlaceDetails(placeId) {
   try {
-    const res = await fetch(`http://localhost:3001/places/details?place_id=${placeId}`);
+    const res = await fetch(`https://utbergen-server-production.up.railway.app/places/details?place_id=${placeId}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     return data.result || null;
@@ -202,7 +202,7 @@ async function fetchWebsiteContent(venue) {
 
 async function claudeScrapeEvents(venue, content) {
   try {
-    const res = await fetch('http://localhost:3001/claude/scrape-events', {
+    const res = await fetch('https://utbergen-server-production.up.railway.app/claude/scrape-events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ venue, content })
@@ -507,7 +507,7 @@ function VenueDetail({venue,events,onBack,onRequestChange,knownSubmitters}){
     <>
       <div style={{height:220,borderRadius:14,overflow:"hidden",marginBottom:8,position:"relative",border:"1px solid rgba(255,255,255,0.08)"}}>
         <img
-          src={`http://localhost:3001/places/photo?photo_reference=${venue.photo_references[photoIdx]}&maxwidth=800`}
+          src={`https://utbergen-server-production.up.railway.app/places/photo?photo_reference=${venue.photo_references[photoIdx]}&maxwidth=800`}
           alt={venue.name}
           style={{width:"100%",height:"100%",objectFit:"cover"}}
           onError={e=>{e.target.style.display="none";}}
@@ -524,7 +524,7 @@ function VenueDetail({venue,events,onBack,onRequestChange,knownSubmitters}){
         {venue.photo_references.map((ref,i)=>(
           <img
             key={i}
-            src={`http://localhost:3001/places/photo?photo_reference=${ref}&maxwidth=200`}
+            src={`https://utbergen-server-production.up.railway.app/places/photo?photo_reference=${ref}&maxwidth=200`}
             alt={`${venue.name} ${i+1}`}
             onClick={()=>setPhotoIdx(i)}
             style={{width:52,height:40,borderRadius:8,objectFit:"cover",cursor:"pointer",border:`2px solid ${i===photoIdx?"#6366f1":"rgba(255,255,255,0.08)"}`,opacity:i===photoIdx?1:0.6,flexShrink:0}}

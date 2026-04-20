@@ -829,7 +829,7 @@ function Pipeline({onComplete}){
       setCounts(p=>({...p,venues:foundVenues.length}));
       addLog(`  ✓ ${results.length} treff → ${newCount} nye`,"#4ade80");
       setPct(((i+1)/GEO_QUERIES.length)*35);
-      await delay(400);
+      await delay(1500);
     }
 
     addLog(`✅ Fant ${foundVenues.length} unike utesteder i Bergen`,"#4ade80");
@@ -850,7 +850,7 @@ function Pipeline({onComplete}){
       }
       if(v.website){setCounts(p=>({...p,websites:p.websites+1}));addLog(`  🌐 ${v.name}: ${v.website.replace("https://","").slice(0,40)}`,"#4ade80");}
       setPct(35+((i+1)/topVenues.length)*25);
-      await delay(300);
+      await delay(1500);
     }
 
     // ── Fase 3: Lagre i Supabase ──
@@ -879,7 +879,7 @@ function Pipeline({onComplete}){
       }
       setCounts(p=>({...p,scanned:i+1}));
       setPct(60+((i+1)/venuesWithSite.length)*20);
-      await delay(200);
+      await delay(1500);
     }
 
     // ── Fase 5: Skann venue_urls-tabellen ──
@@ -908,7 +908,7 @@ function Pipeline({onComplete}){
           }
         }
         setPct(80+((i+1)/venueUrls.length)*15);
-        await delay(300);
+        await delay(1500);
       }
     } else {
       addLog("— Ingen venue_urls registrert – kjør insert_venue_urls() i Supabase","#475569");

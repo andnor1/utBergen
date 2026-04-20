@@ -208,7 +208,17 @@ async function claudeScrapeEvents(venue, content) {
       body: JSON.stringify({ venue, content })
     });
     const data = await res.json();
-    return data.events || [];
+    let events = data.events || [];
+    
+    // Generer unike IDer basert på innhold
+    events = events.map((e) => ({
+      ...e,
+      id: `${venue.place_id}_${(e.title||'').toLowerCase().replace(/\s+/g,'_').slice(0,30)}_${(e.date||'').replace(/\s+/g,'')}`,
+      venue_id: venue.place_id,
+      league: e.league || null,
+    }));
+    
+    return events;
   } catch {
     return [];
   }
@@ -916,9 +926,11 @@ function Pipeline({onComplete}){
 
     // ── Fase 6: Lagre eventer ──
     if(allEvents.length>0){
-      addLog(`💾 Lagrer ${allEvents.length} eventer i Supabase...`,"#34d399");
-      await dbUpsertEvents(allEvents);
-    }
+  addLog(`🗑 Sletter gamle eventer...`,"#f59e0b");
+  await supabase.from('events').delete().neq('id', 'placeholder');
+  addLog(`💾 Lagrer ${allEvents.length} nye eventer...`,"#34d399");
+  await dbUpsertEvents(allEvents);
+}
 
     setPct(100);
     addLog(`\n✅ PIPELINE FERDIG!`,"#4ade80");

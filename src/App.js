@@ -810,7 +810,7 @@ function Pipeline({onComplete}){
 
     // ── Fase 1: Google Places ──
     addLog("🔍 Søker etter utesteder i Bergen via Google Places API...","#60a5fa");
-    await delay(300);
+    await delay(400);
 
     const seen=new Set();
     const foundVenues=[];
@@ -841,7 +841,7 @@ function Pipeline({onComplete}){
       setCounts(p=>({...p,venues:foundVenues.length}));
       addLog(`  ✓ ${results.length} treff → ${newCount} nye`,"#4ade80");
       setPct(((i+1)/GEO_QUERIES.length)*35);
-      await delay(1500);
+      await delay(300);
     }
 
     addLog(`✅ Fant ${foundVenues.length} unike utesteder i Bergen`,"#4ade80");
@@ -873,7 +873,7 @@ function Pipeline({onComplete}){
       }
       if(v.website){setCounts(p=>({...p,websites:p.websites+1}));addLog(`  🌐 ${v.name}: ${v.website.replace("https://","").slice(0,40)}`,"#4ade80");}
       setPct(35+((i+1)/topVenues.length)*25);
-      await delay(1500);
+      await delay(200);
     }
 
     // ── Fase 3: Lagre i Supabase ──

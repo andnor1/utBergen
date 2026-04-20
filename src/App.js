@@ -99,6 +99,8 @@ async function dbUpsertVenues(venues) {
     description: v.description || "",
     hours: v.hours || {},
     photo_references: v.photo_references || null,
+    cover_image: v.cover_image || null,
+    logo_url: v.logo_url || null,
   }));
   const { error } = await supabase.from("venues").upsert(rows, { onConflict: "place_id" });
   if (error) console.error("upsertVenues:", error);
@@ -857,6 +859,17 @@ function Pipeline({onComplete}){
         if(details.rating) v.rating=details.rating;
         if(details.user_ratings_total) v.ratingCount=details.user_ratings_total;
         if(details.photos) v.photo_references=details.photos.slice(0,6).map(p=>p.photo_reference);
+      }
+      // Hent OG-bilder fra nettside
+      if(v.website){
+        try{
+          const ogRes = await fetch(`https://utbergen-server-production.up.railway.app/og-images?url=${encodeURIComponent(v.website)}`);
+          const og = await ogRes.json();
+          if(og.cover) v.cover_image = og.cover;
+          if(og.logo) v.logo_url = og.logo;
+          if(og.description && !v.description) v.description = og.description;
+          addLog(`  🖼 ${v.name}: cover og logo hentet`,"#4ade80");
+        }catch{}
       }
       if(v.website){setCounts(p=>({...p,websites:p.websites+1}));addLog(`  🌐 ${v.name}: ${v.website.replace("https://","").slice(0,40)}`,"#4ade80");}
       setPct(35+((i+1)/topVenues.length)*25);

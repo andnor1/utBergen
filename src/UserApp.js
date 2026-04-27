@@ -93,7 +93,7 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
               {hasCover&&(
                 <div style={{position:"relative",overflow:"hidden"}}>
                   <img src={`${SERVER}/proxy-image?url=${encodeURIComponent(v.cover_image)}`}
-                    alt={v.name} style={{width:"100%",height:"auto",display:"block",maxHeight:200,objectFit:"cover",objectPosition:"center top"}}
+                    alt={v.name} style={{width:"100%",height:"auto",display:"block",maxHeight:300,objectFit:"cover",objectPosition:"center center"}}
                     onError={e=>{e.target.parentElement.style.display="none";}}/>
                   <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(6,11,20,0.9))"}}/>
                 </div>

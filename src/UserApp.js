@@ -99,6 +99,14 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
     const matchSearch=!search||v.name.toLowerCase().includes(search.toLowerCase())||(v.address||"").toLowerCase().includes(search.toLowerCase());
     const matchOpen=!onlyOpen||isOpenNow(v.hours);
     return matchCat&&matchSearch&&matchOpen;
+  }).sort((a,b)=>{
+    const aTon=(events[a.place_id]||[]).filter(e=>isTodayDate(e.date)).length;
+    const bTon=(events[b.place_id]||[]).filter(e=>isTodayDate(e.date)).length;
+    if(bTon!==aTon) return bTon-aTon;
+    const aOpen=isOpenNow(a.hours)?1:0;
+    const bOpen=isOpenNow(b.hours)?1:0;
+    if(bOpen!==aOpen) return bOpen-aOpen;
+    return (b.rating||0)-(a.rating||0);
   }),[cat,search,venues,events,onlyOpen]);
 
   const allEvents=useMemo(()=>venues.flatMap(v=>(events[v.place_id]||[]).map(e=>({...e,venueName:v.name}))).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.time||"").localeCompare(b.time||"")),[venues,events]);

@@ -83,11 +83,11 @@ export default function VenueDetail({venue,events,onBack,onRequestChange,knownSu
       </button>
 
       {/* ── HERO ── */}
-      <div style={{position:"relative",height:260,borderRadius:18,overflow:"hidden",marginBottom:0}}>
+      <div style={{position:"relative",borderRadius:18,overflow:"hidden",marginBottom:0}}>
         {hasCover?(
           <img src={`${SERVER}/proxy-image?url=${encodeURIComponent(venue.cover_image)}`}
             alt={venue.name} onError={()=>setCoverError(true)}
-            style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}/>
+            style={{width:"100%",height:"auto",display:"block",maxHeight:380,objectFit:"cover",objectPosition:"center top"}}/>
         ):(
           <div style={{position:"absolute",inset:0,background:`linear-gradient(135deg,#0a1220,${accent}22,#0a1220)`}}>
             <div style={{position:"absolute",inset:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"100px",opacity:0.07}}>{emoji}</div>
@@ -207,9 +207,9 @@ export default function VenueDetail({venue,events,onBack,onRequestChange,knownSu
         <div style={{display:"flex",justifyContent:"flex-end",marginBottom:10}}><SrcBadge label="Google Places" color="#4285F4" icon="🔍"/></div>
         {venue.photo_references?.length>0?(
           <>
-            <div style={{height:260,borderRadius:16,overflow:"hidden",marginBottom:10,position:"relative",boxShadow:"0 8px 32px rgba(0,0,0,0.4)"}}>
+            <div style={{borderRadius:16,overflow:"hidden",marginBottom:10,position:"relative",boxShadow:"0 8px 32px rgba(0,0,0,0.4)"}}>
               <img src={`${SERVER}/places/photo?photo_reference=${venue.photo_references[photoIdx]}&maxwidth=900`}
-                alt={venue.name} style={{width:"100%",height:"100%",objectFit:"cover"}}
+                alt={venue.name} style={{width:"100%",height:"auto",display:"block",maxHeight:400,objectFit:"cover"}}
                 onError={e=>{e.target.style.display="none";}}/>
               <div style={{position:"absolute",bottom:10,left:12,color:"rgba(255,255,255,0.5)",fontSize:"10px",background:"rgba(0,0,0,0.5)",padding:"2px 10px",borderRadius:999,backdropFilter:"blur(4px)"}}>
                 {photoIdx+1} / {venue.photo_references.length} · Google Places

@@ -91,9 +91,9 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
             <div key={v.place_id} onClick={()=>setDetailVenue(v)}
               style={{cursor:"pointer",borderRadius:16,overflow:"hidden",border:`1px solid ${accent}28`,background:"rgba(255,255,255,0.025)",animation:`fadeUp 0.3s ease ${i*20}ms both`,transition:"border 0.2s",position:"relative"}}>
               {hasCover&&(
-                <div style={{height:110,position:"relative",overflow:"hidden"}}>
+                <div style={{position:"relative",overflow:"hidden"}}>
                   <img src={`${SERVER}/proxy-image?url=${encodeURIComponent(v.cover_image)}`}
-                    alt={v.name} style={{width:"100%",height:"100%",objectFit:"cover",objectPosition:"center"}}
+                    alt={v.name} style={{width:"100%",height:"auto",display:"block",maxHeight:200,objectFit:"cover",objectPosition:"center top"}}
                     onError={e=>{e.target.parentElement.style.display="none";}}/>
                   <div style={{position:"absolute",inset:0,background:"linear-gradient(to bottom,rgba(0,0,0,0.05),rgba(6,11,20,0.9))"}}/>
                 </div>

@@ -29,17 +29,39 @@ const catEmoji = (categories=[]) => {
 const isOpenNow = (hours={}) => {
   const now = new Date();
   const days = ["Søn","Man","Tir","Ons","Tor","Fre","Lør"];
-  const day = days[now.getDay()];
-  const h = hours[day];
-  if (!h || h === "Stengt") return false;
-  const parts = h.split("–");
-  if (parts.length < 2) return false;
   const toMin = t => { const [hh,mm] = t.trim().split(":").map(Number); return hh*60+(mm||0); };
   const nowMin = now.getHours()*60+now.getMinutes();
-  const open = toMin(parts[0]);
-  let close = toMin(parts[1]);
-  if (close < open) close += 24*60;
-  return nowMin >= open && nowMin < close;
+
+  // Sjekk dagens dag
+  const todayName = days[now.getDay()];
+  const todayH = hours[todayName];
+  if (todayH && todayH !== "Stengt") {
+    const parts = todayH.split("–");
+    if (parts.length >= 2) {
+      const open = toMin(parts[0]);
+      let close = toMin(parts[1]);
+      if (close < open) close += 24*60;
+      if (nowMin >= open) return true; // åpnet i dag, stenger etter midnatt
+    }
+  }
+
+  // Sjekk også gårsdagens åpningstider (for å fange 00:00–03:00)
+  const yesterdayIdx = (now.getDay() + 6) % 7;
+  const yesterdayName = days[yesterdayIdx];
+  const yesterdayH = hours[yesterdayName];
+  if (yesterdayH && yesterdayH !== "Stengt") {
+    const parts = yesterdayH.split("–");
+    if (parts.length >= 2) {
+      const open = toMin(parts[0]);
+      let close = toMin(parts[1]);
+      if (close < open) {
+        // Stenger etter midnatt – er vi innenfor?
+        if (nowMin < close) return true;
+      }
+    }
+  }
+
+  return false;
 };
 
 const isTodayDate = (dateStr="") => {

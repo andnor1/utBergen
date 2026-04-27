@@ -109,7 +109,24 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
     return (b.rating||0)-(a.rating||0);
   }),[cat,search,venues,events,onlyOpen]);
 
-  const allEvents=useMemo(()=>venues.flatMap(v=>(events[v.place_id]||[]).map(e=>({...e,venueName:v.name}))).sort((a,b)=>(a.date||"").localeCompare(b.date||"")||(a.time||"").localeCompare(b.time||"")),[venues,events]);
+  const parseEventDate = (dateStr="") => {
+    const months = ["jan","feb","mar","apr","mai","jun","jul","aug","sep","okt","nov","des"];
+    const lower = dateStr.toLowerCase().trim();
+    const parts = lower.replace(".","").split(" ").filter(Boolean);
+    if (parts.length < 2) return new Date(9999,0,1);
+    const day = parseInt(parts[0]) || 1;
+    const monthIdx = months.findIndex(m => parts[1]?.startsWith(m));
+    const now = new Date();
+    const year = monthIdx < now.getMonth() - 1 ? now.getFullYear()+1 : now.getFullYear();
+    return new Date(year, monthIdx === -1 ? 0 : monthIdx, day);
+  };
+
+  const allEvents=useMemo(()=>venues.flatMap(v=>(events[v.place_id]||[]).map(e=>({...e,venueName:v.name}))).sort((a,b)=>{
+    const dateA = parseEventDate(a.date);
+    const dateB = parseEventDate(b.date);
+    if(dateA - dateB !== 0) return dateA - dateB;
+    return (a.time||"").localeCompare(b.time||"");
+  }),[venues,events]);
 
   if(detailVenue) return <VenueDetail venue={detailVenue} events={events} onBack={()=>setDetailVenue(null)} onRequestChange={onRequestChange} knownSubmitters={knownSubmitters}/>;
 

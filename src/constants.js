@@ -37,6 +37,11 @@ export const FILTER_CATS = [
   {id:"sport",label:"Sport",emoji:"🏆"},
   {id:"nightclub",label:"Nattklubb",emoji:"🎉"},
   {id:"games",label:"Spill",emoji:"🎮"},
+  {id:"pool",label:"Biljard",emoji:"🎱"},
+  {id:"shuffleboard",label:"Shuffleboard",emoji:"🏒"},
+  {id:"minigolf",label:"Minigolf",emoji:"⛳"},
+  {id:"karaoke",label:"Karaoke",emoji:"🎤"},
+  {id:"dart",label:"Dart",emoji:"🎯"},
   {id:"craft_beer",label:"Håndverksøl",emoji:"🍺"},
   {id:"happy_hour",label:"Happy Hour",emoji:"🥂"},
 ];
@@ -53,6 +58,28 @@ export const EV = {
   event:{color:"#a855f7",emoji:"📅"},
 };
 
+
+// Alle kategorier for admin-panel
+export const ALL_CATEGORIES = [
+  {id:"football",label:"Fotball",emoji:"⚽"},
+  {id:"live_music",label:"Live musikk",emoji:"🎸"},
+  {id:"quiz",label:"Quiz",emoji:"🧠"},
+  {id:"cocktail",label:"Cocktail",emoji:"🍸"},
+  {id:"sport",label:"Sport",emoji:"🏆"},
+  {id:"nightclub",label:"Nattklubb",emoji:"🎉"},
+  {id:"games",label:"Spill/Brettspill",emoji:"🎮"},
+  {id:"pool",label:"Biljard",emoji:"🎱"},
+  {id:"shuffleboard",label:"Shuffleboard",emoji:"🏒"},
+  {id:"minigolf",label:"Minigolf",emoji:"⛳"},
+  {id:"karaoke",label:"Karaoke",emoji:"🎤"},
+  {id:"dart",label:"Dart",emoji:"🎯"},
+  {id:"craft_beer",label:"Håndverksøl",emoji:"🍺"},
+  {id:"happy_hour",label:"Happy Hour",emoji:"🥂"},
+  {id:"pub",label:"Pub",emoji:"🍻"},
+  {id:"bowling",label:"Bowling",emoji:"🎳"},
+  {id:"student",label:"Studentbar",emoji:"🎓"},
+  {id:"terrace",label:"Uteservering",emoji:"☀️"},
+];
 export const KNOWN_SUBMITTERS = {
   "claus@felixbergen.no":{name:"Claus Pedersen",role:"owner",venue:"Felix",approved:4,rejected:0},
   "post@fotballpuben.no":{name:"Lars Eriksen",role:"manager",venue:"Fotballpuben",approved:2,rejected:1},

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useState, useEffect } from "react";
-import { FALLBACK_VENUES, FALLBACK_EVENTS, KNOWN_SUBMITTERS, inp, lbl } from "./constants";
+import { FALLBACK_VENUES, FALLBACK_EVENTS, KNOWN_SUBMITTERS, ALL_CATEGORIES, inp, lbl } from "./constants";
 import { supabase, dbFetchVenues, dbFetchEvents, dbFetchRequests, dbUpdateRequestStatus } from "./api";
 import UserApp from "./UserApp";
 import Pipeline from "./Pipeline";
@@ -85,6 +85,7 @@ function AdminPanel({ user, venues, onRefresh, showToast, onClose }) {
       website:editVenue.website||null, phone:editVenue.phone||null,
       instagram:editVenue.instagram||null, facebook:editVenue.facebook||null,
       description:editVenue.description||null, hours:editVenue.hours||{},
+      categories:editVenue.categories||[],
     }).eq("place_id",editVenue.place_id);
     setSaving(false);
     showToast("✓ Utested lagret!","success");
@@ -195,7 +196,20 @@ function AdminPanel({ user, venues, onRefresh, showToast, onClose }) {
                   <input value={editVenue.hours?.[day]||""} onChange={e=>setEditVenue(p=>({...p,hours:{...p.hours,[day]:e.target.value}}))} placeholder="Stengt" style={{ ...inp,padding:"6px 10px",fontSize:12 }}/>
                 </div>
               ))}
-              <div style={{ color:"#6366f1",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(99,102,241,0.2)",paddingBottom:5,marginTop:4 }}>Event-URL-er</div>
+              <div style={{ color:"#6366f1",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(99,102,241,0.2)",paddingBottom:5,marginTop:4 }}>Kategorier</div>
+              <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:6 }}>
+                {ALL_CATEGORIES.map(cat=>{
+                  const isSelected=(editVenue.categories||[]).includes(cat.id);
+                  return(
+                    <button key={cat.id} onClick={()=>setEditVenue(p=>({...p,categories:isSelected?(p.categories||[]).filter(c=>c!==cat.id):[...(p.categories||[]),cat.id]}))}
+                      style={{ display:"flex",alignItems:"center",gap:6,padding:"6px 10px",background:isSelected?"rgba(99,102,241,0.15)":"rgba(255,255,255,0.03)",border:`1px solid ${isSelected?"rgba(99,102,241,0.4)":"rgba(255,255,255,0.07)"}`,borderRadius:8,color:isSelected?"#a5b4fc":"#64748b",cursor:"pointer",fontSize:11,fontWeight:600,textAlign:"left" }}>
+                      <span style={{ fontSize:14 }}>{cat.emoji}</span>{cat.label}
+                      {isSelected&&<span style={{ marginLeft:"auto",color:"#6366f1",fontSize:12 }}>✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+                            <div style={{ color:"#6366f1",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(99,102,241,0.2)",paddingBottom:5,marginTop:4 }}>Event-URL-er</div>
               {venueUrls.map(u=>(
                 <div key={u.id} style={{ background:"rgba(255,255,255,0.03)",border:`1px solid ${u.active?"rgba(34,197,94,0.2)":"rgba(255,255,255,0.05)"}`,borderRadius:9,padding:"8px 10px",display:"flex",alignItems:"center",gap:8 }}>
                   <div style={{ flex:1,minWidth:0 }}>

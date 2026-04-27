@@ -56,6 +56,8 @@ function AdminPanel({ user, venues, onRefresh, showToast, onClose }) {
   const [venueUrls, setVenueUrls] = useState([]);
   const [newUrl, setNewUrl] = useState({ url:"", description:"" });
   const [saving, setSaving] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
 
   useEffect(()=>{ loadRequests(); },[]);
 
@@ -90,6 +92,30 @@ function AdminPanel({ user, venues, onRefresh, showToast, onClose }) {
     setSaving(false);
     showToast("✓ Utested lagret!","success");
     onRefresh();
+  };
+
+
+  const uploadImage = async (file, type) => {
+    if (!file || !editVenue) return;
+    const isLogo = type === 'logo';
+    if (isLogo) setUploadingLogo(true); else setUploadingCover(true);
+    try {
+      const ext = file.name.split('.').pop();
+      const path = `${editVenue.place_id}/${type}_${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from('venue-images').upload(path, file, { upsert: true });
+      if (upErr) { showToast(`✕ Opplasting feilet: ${upErr.message}`, 'error'); return; }
+      const { data: urlData } = supabase.storage.from('venue-images').getPublicUrl(path);
+      const publicUrl = urlData.publicUrl;
+      const updateField = isLogo ? { logo_url: publicUrl } : { cover_image: publicUrl };
+      await supabase.from('venues').update(updateField).eq('place_id', editVenue.place_id);
+      setEditVenue(p => ({ ...p, ...(isLogo ? { logo_url: publicUrl } : { cover_image: publicUrl }) }));
+      showToast(`✓ ${isLogo ? 'Logo' : 'Cover-bilde'} lastet opp!`, 'success');
+      onRefresh();
+    } catch (err) {
+      showToast(`✕ Feil: ${err.message}`, 'error');
+    } finally {
+      if (isLogo) setUploadingLogo(false); else setUploadingCover(false);
+    }
   };
 
   const addUrl = async () => {
@@ -184,6 +210,45 @@ function AdminPanel({ user, venues, onRefresh, showToast, onClose }) {
               <div><label style={lbl}>Navn</label><input value={editVenue.name||""} onChange={e=>setEditVenue(p=>({...p,name:e.target.value}))} style={inp}/></div>
               <div><label style={lbl}>Adresse</label><input value={editVenue.address||""} onChange={e=>setEditVenue(p=>({...p,address:e.target.value}))} style={inp}/></div>
               <div><label style={lbl}>Beskrivelse</label><textarea value={editVenue.description||""} onChange={e=>setEditVenue(p=>({...p,description:e.target.value}))} rows={3} style={{ ...inp,resize:"vertical" }}/></div>
+              <div style={{ color:"#6366f1",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(99,102,241,0.2)",paddingBottom:5,marginTop:4 }}>Bilder</div>
+
+              {/* Cover bilde */}
+              <div>
+                <label style={lbl}>Cover-bilde {editVenue.cover_image&&<span style={{color:"#4ade80",fontSize:10}}>✓ Lastet opp</span>}</label>
+                {editVenue.cover_image&&(
+                  <div style={{marginBottom:8,borderRadius:10,overflow:"hidden",position:"relative",height:80}}>
+                    <img src={`https://utbergen-server-production.up.railway.app/proxy-image?url=${encodeURIComponent(editVenue.cover_image)}`}
+                      alt="cover" style={{width:"100%",height:"100%",objectFit:"cover"}}
+                      onError={e=>{e.target.style.display="none";}}/>
+                    <button onClick={async()=>{await supabase.from("venues").update({cover_image:null}).eq("place_id",editVenue.place_id);setEditVenue(p=>({...p,cover_image:null}));onRefresh();}}
+                      style={{position:"absolute",top:4,right:4,background:"rgba(239,68,68,0.8)",border:"none",borderRadius:999,color:"#fff",cursor:"pointer",fontSize:11,padding:"2px 8px"}}>✕ Fjern</button>
+                  </div>
+                )}
+                <label style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"rgba(99,102,241,0.06)",border:"1px dashed rgba(99,102,241,0.3)",borderRadius:9,cursor:"pointer"}}>
+                  <span style={{fontSize:16}}>🖼</span>
+                  <span style={{color:"#a5b4fc",fontSize:12,fontWeight:600}}>{uploadingCover?"⟳ Laster opp...":"Last opp cover-bilde"}</span>
+                  <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files[0]&&uploadImage(e.target.files[0],"cover")} disabled={uploadingCover}/>
+                </label>
+              </div>
+
+              {/* Logo */}
+              <div>
+                <label style={lbl}>Logo {editVenue.logo_url&&<span style={{color:"#4ade80",fontSize:10}}>✓ Lastet opp</span>}</label>
+                {editVenue.logo_url&&(
+                  <div style={{marginBottom:8,background:"rgba(255,255,255,0.05)",borderRadius:10,padding:8,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+                    <img src={`https://utbergen-server-production.up.railway.app/proxy-image?url=${encodeURIComponent(editVenue.logo_url)}`}
+                      alt="logo" style={{height:40,maxWidth:120,objectFit:"contain"}}
+                      onError={e=>{e.target.style.display="none";}}/>
+                    <button onClick={async()=>{await supabase.from("venues").update({logo_url:null}).eq("place_id",editVenue.place_id);setEditVenue(p=>({...p,logo_url:null}));onRefresh();}}
+                      style={{background:"rgba(239,68,68,0.1)",border:"1px solid rgba(239,68,68,0.2)",borderRadius:6,color:"#f87171",cursor:"pointer",fontSize:11,padding:"3px 8px"}}>✕ Fjern</button>
+                  </div>
+                )}
+                <label style={{display:"flex",alignItems:"center",gap:8,padding:"10px 12px",background:"rgba(99,102,241,0.06)",border:"1px dashed rgba(99,102,241,0.3)",borderRadius:9,cursor:"pointer"}}>
+                  <span style={{fontSize:16}}>🏷</span>
+                  <span style={{color:"#a5b4fc",fontSize:12,fontWeight:600}}>{uploadingLogo?"⟳ Laster opp...":"Last opp logo"}</span>
+                  <input type="file" accept="image/*" style={{display:"none"}} onChange={e=>e.target.files[0]&&uploadImage(e.target.files[0],"logo")} disabled={uploadingLogo}/>
+                </label>
+              </div>
               <div style={{ color:"#6366f1",fontSize:10,fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",borderBottom:"1px solid rgba(99,102,241,0.2)",paddingBottom:5,marginTop:4 }}>Kontakt</div>
               <div><label style={lbl}>Nettside</label><input value={editVenue.website||""} onChange={e=>setEditVenue(p=>({...p,website:e.target.value}))} placeholder="https://..." style={inp}/></div>
               <div><label style={lbl}>Telefon</label><input value={editVenue.phone||""} onChange={e=>setEditVenue(p=>({...p,phone:e.target.value}))} placeholder="+47 xx xx xx xx" style={inp}/></div>

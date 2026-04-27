@@ -97,7 +97,10 @@ export default function Pipeline({onComplete}){
       const content=await fetchWebsiteContent(v);
       if(content){
         const events=await claudeScrapeEvents(v,content);
+        console.log(`${v.name}: ${events.length} eventer funnet`, events.slice(0,1));
         if(events.length>0){allEvents.push(...events);setCounts(p=>({...p,events:p.events+events.length}));addLog(`  ✓ ${events.length} eventer`,"#4ade80");}
+      } else {
+        console.log(`${v.name}: ingen innhold hentet`);
       }
       setCounts(p=>({...p,scanned:i+1}));
       setPct(60+((i+1)/venuesWithSite.length)*20);
@@ -124,6 +127,7 @@ export default function Pipeline({onComplete}){
     }
 
     // ── Fase 6: Lagre eventer ──
+    console.log('Total events å lagre:', allEvents.length);
     if(allEvents.length>0){
       addLog(`🗑 Sletter gamle eventer...`,"#f59e0b");
       await supabase.from('events').delete().neq('id','placeholder');

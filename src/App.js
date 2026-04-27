@@ -352,11 +352,17 @@ export default function NattBergen() {
       </div>
 
       {/* Footer – klikk 5 ganger for admin */}
-      <div style={{ textAlign:"center",padding:"16px 0 28px" }}>
-        <span onClick={handleVersionClick} style={{ color:"#1e293b",fontSize:10,cursor:"default",userSelect:"none" }}>
+      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:16 }}>
+        <span style={{ color:"#1e293b", fontSize:10 }}>
           utBergen v5.1 · Google Places · Claude AI · Supabase · Bergen 2026
-          {adminClickCount>0&&adminClickCount<5&&<span style={{ color:"#334155" }}> {'·'.repeat(adminClickCount)}</span>}
         </span>
+        <button onClick={handleVersionClick} style={{
+          background:"none", border:"1px solid rgba(255,255,255,0.06)",
+          borderRadius:6, color:"#1e293b", cursor:"pointer",
+          fontSize:10, padding:"3px 8px", fontWeight:600,
+        }}>
+          {adminUser ? "🛠 Admin" : "🔐"}
+        </button>
       </div>
     </div>
   );

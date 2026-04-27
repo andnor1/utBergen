@@ -71,7 +71,19 @@ export async function dbUpsertVenues(venues) {
 
 export async function dbUpsertEvents(events) {
   if (!events.length) return;
-  const { error } = await supabase.from("events").upsert(events, { onConflict: "id" });
+  // Kun behold kolonner som finnes i databasen
+  const clean = events.map(e => ({
+    id: e.id,
+    venue_id: e.venue_id,
+    title: e.title,
+    date: e.date,
+    time: e.time,
+    type: e.type,
+    league: e.league || null,
+  }));
+  // Dedupliser
+  const unique = Object.values(clean.reduce((acc, e) => { acc[e.id] = e; return acc; }, {}));
+  const { error } = await supabase.from("events").upsert(unique, { onConflict: "id" });
   if (error) console.error("upsertEvents:", error);
 }
 

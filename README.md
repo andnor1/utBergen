@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# utBergen 🍺
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Dette prosjektet er primært et lærings- og testprosjekt, og er ikke utviklet med intensjon om lansering. Jeg har tidligere erfaring med andre AI-verktøy, men ønsket å utforske Claude (Anthropic) spesifikt – et verktøy jeg ikke hadde brukt før. utBergen ble derfor til som et konkret og realistisk prosjekt for å lære Claude å kjenne, forstå mulighetene den gir og teste hvor langt man kan komme med AI-assistert utvikling.
 
-## Available Scripts
+**Live:** [ut-bergen.vercel.app](https://ut-bergen.vercel.app)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Hva er utBergen?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+utBergen er en webapp som samler alle utesteder i Bergen på ett sted. Appen viser barer, puber, nattklubber og andre utestedstilbud i Bergen, med live informasjon om eventer, åpningstider og hva som skjer i kveld.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Brukeren kan:
+- Se alle utesteder i Bergen med rating, adresse og åpningstider
+- Filtrere på kategori (fotball, live musikk, quiz, cocktail, nattklubb osv.)
+- Se hva som skjer **i kveld** øverst på siden
+- Filtrere på **åpent nå**
+- Se utesteder på kart
+- Bla gjennom kommende eventer på tvers av alle steder
+- Sende inn endringsforslag hvis noe er feil
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Teknologi
 
-### `npm run build`
+| Lag | Teknologi |
+|---|---|
+| Frontend | React (Vercel) |
+| Backend/proxy | Node.js + Express (Railway) |
+| Database | Supabase (PostgreSQL) |
+| Kart | Google Maps JavaScript API |
+| Stedsdata | Google Places API |
+| AI-agent | Claude API (Anthropic) |
+| Autentisering | Supabase Auth |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Hvordan fungerer det?
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### AI-pipeline
+En automatisk pipeline kjøres daglig kl. 06:00 og gjør følgende:
 
-### `npm run eject`
+1. **Google Places API** søker etter utesteder i Bergen med 18 ulike søkeord
+2. **Open Graph-scraping** henter cover-bilder og beskrivelser fra utestedenes nettsider
+3. **AI-agenten (Claude)** crawler nettsidene, følger relevante lenker og ekstraherer kommende eventer automatisk
+4. Alt lagres i **Supabase**-databasen og er umiddelbart tilgjengelig i appen
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Admin-panel
+Et skjult admin-panel lar administratorer redigere utestedsinformasjon, legge til event-URL-er og godkjenne endringsforslag fra brukere.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Arkitektur
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+Bruker → Vercel (React)
+              ↓
+         Railway (Node.js proxy)
+         ├── Google Places API
+         ├── Claude AI (event-scraping)
+         └── Supabase (database)
+```
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Kjente begrensninger
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Bildekvaliteten varierer siden bilder hentes automatisk fra nettsider
+- Event-informasjon er avhengig av at utestedene publiserer info på sine nettsider
+- Datoformat fra AI-agenten kan variere
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*Bygget med Claude AI · Google Places · Supabase · Bergen 2026*

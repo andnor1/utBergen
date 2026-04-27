@@ -332,8 +332,6 @@ export default function NattBergen() {
           <div style={{ display:"flex",gap:3 }}>
             {[
               {id:"app",icon:"🍺",label:"Appen",sub:`${venues.length} utesteder`},
-              {id:"pipeline",icon:"⚙️",label:"Pipeline",sub:"Oppdater data"},
-              {id:"admin",icon:"🔔",label:"Admin",sub:pending>0?`${pending} venter`:"Ingen nye",badge:pending},
             ].map(t=>(
               <button key={t.id} onClick={()=>setTab(t.id)} style={{ background:tab===t.id?"rgba(99,102,241,0.12)":"transparent",border:"none",borderBottom:tab===t.id?"2px solid #6366f1":"2px solid transparent",color:tab===t.id?"#a5b4fc":"#64748b",padding:"7px 13px",cursor:"pointer",borderRadius:"6px 6px 0 0",textAlign:"left",position:"relative",transition:"all 0.2s" }}>
                 <div style={{ fontSize:12,fontWeight:700 }}>{t.icon} {t.label}</div>
@@ -347,8 +345,6 @@ export default function NattBergen() {
 
       <div style={{ maxWidth:900,margin:"0 auto",padding:18 }}>
         {tab==="app"&&<UserApp venues={venues} events={events} onRequestChange={handleRequestChange} knownSubmitters={knownSubmitters} loading={loading}/>}
-        {tab==="pipeline"&&<Pipeline onComplete={handlePipelineComplete}/>}
-        {tab==="admin"&&<AdminQueue requests={requests} onAction={handleAction}/>}
       </div>
 
       {/* Footer – klikk 5 ganger for admin */}

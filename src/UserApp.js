@@ -121,12 +121,17 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
     return new Date(year, monthIdx === -1 ? 0 : monthIdx, day);
   };
 
-  const allEvents=useMemo(()=>venues.flatMap(v=>(events[v.place_id]||[]).map(e=>({...e,venueName:v.name}))).sort((a,b)=>{
-    const dateA = parseEventDate(a.date);
-    const dateB = parseEventDate(b.date);
-    if(dateA - dateB !== 0) return dateA - dateB;
-    return (a.time||"").localeCompare(b.time||"");
-  }),[venues,events]);
+  const allEvents=useMemo(()=>{
+    const today=new Date(); today.setHours(0,0,0,0);
+    return venues.flatMap(v=>(events[v.place_id]||[]).map(e=>({...e,venueName:v.name})))
+      .filter(e=>parseEventDate(e.date)>=today)
+      .sort((a,b)=>{
+        const dateA=parseEventDate(a.date);
+        const dateB=parseEventDate(b.date);
+        if(dateA-dateB!==0) return dateA-dateB;
+        return (a.time||"").localeCompare(b.time||"");
+      });
+  },[venues,events]);
 
   if(detailVenue) return <VenueDetail venue={detailVenue} events={events} onBack={()=>setDetailVenue(null)} onRequestChange={onRequestChange} knownSubmitters={knownSubmitters}/>;
 
@@ -227,7 +232,8 @@ export default function UserApp({venues,events,onRequestChange,knownSubmitters,l
       {/* ── LISTE ── */}
       {subTab==="list"&&<div style={{display:"flex",flexDirection:"column",gap:10}}>
         {filtered.map((v,i)=>{
-          const vEvs=events[v.place_id]||[];
+          const today2=new Date(); today2.setHours(0,0,0,0);
+          const vEvs=(events[v.place_id]||[]).filter(e=>parseEventDate(e.date)>=today2);
           const hasCover=!!v.cover_image;
           const accent=catAccent(v.categories);
           const emoji=catEmoji(v.categories);

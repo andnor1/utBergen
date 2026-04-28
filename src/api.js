@@ -129,6 +129,15 @@ export function parseHours(openingHours) {
 
 // ─── CLAUDE AI ───────────────────────────────────────────────────────────────
 
+export async function fetchUrlContent(url) {
+  try {
+    const res = await fetch(`${SERVER}/fetch-website?url=${encodeURIComponent(url)}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.text || null;
+  } catch { return null; }
+}
+
 export async function fetchWebsiteContent(venue) {
   if (!venue.website) return null;
   try {

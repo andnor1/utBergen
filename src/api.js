@@ -138,11 +138,13 @@ export async function fetchUrlContent(url) {
   } catch { return null; }
 }
 
+// Alias for venue_urls - reads full page without following links
+export { fetchUrlContent as fetchVenueUrl };
+
 export async function fetchWebsiteContent(venue) {
-  const url = typeof venue === 'string' ? venue : venue.website;
-  if (!url) return null;
+  if (!venue.website) return null;
   try {
-    const res = await fetch(`${SERVER}/crawl-venue?url=${encodeURIComponent(url)}`);
+    const res = await fetch(`${SERVER}/crawl-venue?url=${encodeURIComponent(venue.website)}`);
     if (!res.ok) return null;
     const data = await res.json();
     return data.text || null;

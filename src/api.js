@@ -139,9 +139,10 @@ export async function fetchUrlContent(url) {
 }
 
 export async function fetchWebsiteContent(venue) {
-  if (!venue.website) return null;
+  const url = typeof venue === 'string' ? venue : venue.website;
+  if (!url) return null;
   try {
-    const res = await fetch(`${SERVER}/crawl-venue?url=${encodeURIComponent(venue.website)}`);
+    const res = await fetch(`${SERVER}/crawl-venue?url=${encodeURIComponent(url)}`);
     if (!res.ok) return null;
     const data = await res.json();
     return data.text || null;

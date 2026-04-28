@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { GEO_QUERIES, SERVER } from "./constants";
 import { ProgressBar } from "./ui";
-import { supabase, googleTextSearch, googlePlaceDetails, parseHours, mapGoogleTypes, fetchWebsiteContent, fetchUrlContent, claudeScrapeEvents, dbUpsertVenues, dbUpsertEvents } from "./api";
+import { supabase, googleTextSearch, googlePlaceDetails, parseHours, mapGoogleTypes, fetchWebsiteContent, claudeScrapeEvents, dbUpsertVenues, dbUpsertEvents } from "./api";
 
 export default function Pipeline({onComplete}){
   const [phase,setPhase]=useState("idle");
@@ -116,7 +116,7 @@ export default function Pipeline({onComplete}){
         const vu=venueUrls[i];
         const venueName=vu.venues?.name||vu.venue_id;
         addLog(`🤖 Skanner ${venueName}...`);
-        const content=await fetchUrlContent(vu.url);
+        const content=await fetchWebsiteContent({website:vu.url});
         if(content){
           const events=await claudeScrapeEvents({name:venueName,place_id:vu.venue_id},content);
           if(events.length>0){allEvents.push(...events);setCounts(p=>({...p,events:p.events+events.length}));addLog(`  ✓ ${events.length} eventer`,"#4ade80");}
